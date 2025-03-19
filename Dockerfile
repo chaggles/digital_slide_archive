@@ -88,16 +88,18 @@ RUN cd /opt && \
     cd /opt/large_image && \
     pip install --no-cache-dir --find-links https://girder.github.io/large_image_wheels -e .[memcached] -rrequirements-dev.txt && \
     # Reduce docker size by de-duplicating some libraries that get installed \
-    rdfind -minsize 32768 -makehardlinks true -makeresultsfile false /opt/venv && \
-    \
-    cd /opt && \
-    git clone https://github.com/DigitalSlideArchive/HistomicsUI && \
+    rdfind -minsize 32768 -makehardlinks true -makeresultsfile false /opt/venv
+
+RUN cd /opt && \
+    git clone https://github.com/laodoudou/histomics-overview.git && \
+    mv histomics-overview HistomicsUI && \
+    mkdir test1 && \
     cd /opt/HistomicsUI && \
     pip install --no-cache-dir -e .[analysis] && \
     \
     find /opt/venv \( -name '*.so' -o -name '*.a' -o -name '*.so.*' \) -exec bash -c "strip -p -D --strip-unneeded {} -o /tmp/striped; if ! cmp {} /tmp/striped; then cp /tmp/striped {}; fi; rm -f /tmp/striped" \; && \
     rdfind -minsize 32768 -makehardlinks true -makeresultsfile false /opt/venv && \
-    find / -xdev -type d -name __pycache__ -exec rm -r {} \+
+    find / -xdev -type d -name __pycache__ -exec rm -r {} \+ 
 
 # Install additional girder plugins
 RUN pip install --no-cache-dir \
@@ -118,7 +120,7 @@ RUN NPM_CONFIG_FUND=false NPM_CONFIG_AUDIT=false NPM_CONFIG_AUDIT_LEVEL=high NPM
     find /opt -xdev -name node_modules -exec rm -rf {} \+ && \
     find /opt -name package-lock.json -exec rm -f {} \+ && \
     rm -rf /tmp/* ~/.npm && \
-    find / -xdev -type d -name __pycache__ -exec rm -r {} \+
+    find / -xdev -type d -name __pycache__ -exec rm -r {} \+ 
 
 # Install phantomjs for testing
 RUN npm install -g phantomjs-prebuilt --unsafe-perm && \
