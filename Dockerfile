@@ -58,10 +58,10 @@ RUN python --version && \
 
 # Clone packages and pip install what we want to be local
 RUN cd /opt && \
-    git clone https://github.com/girder/girder && \
+    git clone https://github.com/chaggle/girder && \
     cd /opt/girder && \
     pip install --no-cache-dir -e .[mount] && \
-    pip install --no-cache-dir -e clients/python 
+    pip install --no-cache-dir -e clients/python
 
 RUN cd /opt && \
     git clone https://github.com/girder/girder_worker_utils && \
@@ -84,7 +84,7 @@ RUN cd /opt && \
     pip install --no-cache-dir -e . 
     
 RUN cd /opt && \
-    git clone https://github.com/chaggle/large_image && \
+    git clone https://github.com/girder/large_image && \
     cd /opt/large_image && \
     pip install --no-cache-dir --find-links https://girder.github.io/large_image_wheels -e .[memcached] -rrequirements-dev.txt && \
     # Reduce docker size by de-duplicating some libraries that get installed \
@@ -93,7 +93,7 @@ RUN cd /opt && \
 RUN cd /opt && \
     git clone https://github.com/laodoudou/histomics-overview.git && \
     mv histomics-overview HistomicsUI && \
-    mkdir t && \
+    echo "5" && \
     cd /opt/HistomicsUI && \
     pip install --no-cache-dir -e .[analysis] && \
     \
